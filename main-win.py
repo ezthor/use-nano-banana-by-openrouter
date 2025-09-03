@@ -66,8 +66,49 @@ OUTPUT_DIR = r".\output"
 # 输出保存的文件后缀（即使 BMP 也会转生成 PNG）
 OUTPUT_EXT = ".png"
 
+# PROMPT = (
+#     '''
+# Perform instance segmentation on the provided image, focusing on each individual bond wire assembly.
+
+# Define an 'Instance': Each 'instance' is comprised of one continuous bond wire, extending from one connection pad to another connection pad.
+
+# Segmentation Targets & Strict Color Rules:
+
+# For each unique bond wire instance, do the following:
+
+# Bond Wire Body (the curved/straight line itself): Segment this part and fill it with a single, absolutely uniform, flat, solid color. This color must be unique for each wire instance. For example, Wire 1's body is pure red (255,0,0), Wire 2's body is pure blue (0,0,255), Wire 3's body is pure green (0,255,0), etc. Each wire body should have its own distinct, consistent RGB value.
+
+# Connection Pads (the rectangular areas at the ends of the bond wire): Segment both connection pads that a specific wire instance is connected to. Fill these pads with a single, absolutely uniform, flat, solid color. This color must also be unique for each wire instance, and different from the color used for that same wire's body. For example, if Wire 1's body is red, its pads could be orange (255,165,0). If Wire 2's body is blue, its pads could be purple (128,0,128).
+
+# Color Uniformity is Paramount: Within any segmented region (a wire's body or a specific pad), every single pixel must have the exact same RGB value. There must be no gradients, shading, anti-aliasing, changes in brightness, or any other color variation whatsoever. The colors are for distinct labeling, not artistic rendering.
+
+# Ignore Existing Colors: Disregard any existing colors on the bond wires or pads in the original image. Your output should only use the newly assigned, strictly uniform colors.
+
+# Background: The background of the image (everything not a bond wire or a connection pad) should remain the original pixels."
+# '''
+# )
+
 PROMPT = (
-    "Generate a semantic segmentation mask for the golden wires in this image. The background should retain its original pixels. Each golden wire's body should be uniformly red (RGB: 255, 0, 0), precisely segmenting only the wire's main body. The pins of each golden wire should be uniformly green (RGB: 0, 255, 0). Ensure strict RGB color consistency for all segmented parts."
+"""
+
+Objective: From the provided grayscale image, create a clean, colored tracing of the bond wires and pads. This is a technical tracing task, not a creative drawing task.
+**Foundational Rule: Your absolute top priority is to perfectly preserve the geometry, path, and one-to-one correspondence of every single wire from the original image.**
+**1. Canvas and Background:**
+* The entire background must be a single, solid color: **black (RGB: 0, 0, 0)**.
+* The original image must not be visible in the output.
+**2. Absolute Color Uniformity:**
+* Every segmented part (an entire wire body or an entire pad) must be filled with a **single, flat, solid color**. No gradients, no shading. Use a digital "paint bucket" fill.
+**3. Simplified Coloring Rules (Replaces the old algorithm):**
+* **Rule A (Pads):** Identify all connection pads. Color **ALL** of them with one uniform color: **Magenta (RGB: 255, 0, 255)**.
+* **Rule B (Wires):** Trace each individual bond wire from one end to the other. As you trace each wire, assign it a color by **sequentially cycling through the following 5-color palette**:
+* **Palette: [Red (255,0,0), Green (0,255,0), Blue (0,0,255), White (255,255,255), Yellow (255,255,0)]**
+* For example, the first wire you trace is Red, the second is Green, the third is Blue, the fourth is White, the fifth is Yellow, the sixth goes back to Red, and so on. This simple cyclical pattern ensures adjacent wires will likely have different colors without requiring complex analysis from you.
+**4. Critical Constraints & Prohibitions (VERY IMPORTANT):**
+* **Adhere to Original Paths:** You MUST trace the exact path of each wire as it exists in the source image.
+* **Maintain Separation:** DO NOT merge, bundle, or converge different wires into a single point or a tangled mass. Every wire is sacred and must maintain its distinct path.
+* **One-to-One Mapping:** There must be a one-to-one correspondence between a wire in the input image and a colored wire in your output. Do not invent new wire paths or fail to trace existing ones.
+The final output should look like a human engineer meticulously traced each wire and pad with a specific set of colored pens on a black sheet of paper.
+"""
 )
 
 # 可选 Header（统计用，可留空）
