@@ -13,15 +13,15 @@ Windows 安全加载 API Key + BMP 转 PNG 再上传 版本
 4. 若返回内容中找不到 base64 图片，保存原始 JSON 以便排查。
 5. 保留 tqdm 进度条。
 6. 目录结构：
-      input_images/   放你的原始图片 (含 .bmp)
-      output_results/ 脚本自动生成
+      input/   放你的原始图片 (含 .bmp)
+      output/ 脚本自动生成
       .env            (可选) 放 API key
 
 依赖：
     pip install requests tqdm pillow python-dotenv
 
 运行：
-    python generate_images_windows_secure.py
+    python main-win.py
 
 根据需要修改下方“可配置区域”的 PROMPT / MODEL / 输入输出目录等。
 

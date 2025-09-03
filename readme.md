@@ -3,7 +3,7 @@ Gemini 2.5 Flash Image Preview (free)
 
 点击api，点击create api key，获得"sk-or-xxx"的api key
 
-![create api key](D:\BaiduSyncdisk\Workspace\use-nano-banana-by-openrouter\assets\create api key.PNG)
+![create api key](.\assets\create api key.PNG)
 
 ## 1. 安装依赖
 ```bash
